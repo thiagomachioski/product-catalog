@@ -1,9 +1,12 @@
-﻿using Products.Catalog.ViewModels.ProductViewModels;
+﻿using Products.Catalog.Models;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Products.Catalog.Models
+namespace Products.Catalog.ViewModels.ProductViewModels
 {
-    public class Product
+    public class FindProductByIdViewModel
     {
         public int Id { get; set; }
         public string Title { get; set; }
@@ -14,7 +17,6 @@ namespace Products.Catalog.Models
         public DateTime CreateDate { get; set; }
         public DateTime LastUpdateDate { get; set; }
         public int CategoryId { get; set; }
-        public Category Category { get; set; }
-
+        public string Category { get; set; }
     }
 }

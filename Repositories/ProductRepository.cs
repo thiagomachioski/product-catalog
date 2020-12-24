@@ -30,10 +30,33 @@ namespace Products.Catalog.Repositories
                    .AsNoTracking()
                    .ToList();
         }
+
         public Product Get(int id)
         {
             return _context.Products.Find(id);
         }
+
+        public FindProductByIdViewModel GetById(int id)
+        {
+            return _context.Products
+                .Select(x => new FindProductByIdViewModel
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                    Description = x.Description,
+                    Price = x.Price,
+                    Quantity = x.Quantity,
+                    Image = x.Image,
+                    CreateDate = x.CreateDate,
+                    LastUpdateDate = x.LastUpdateDate,
+                    Category = x.Category.Title,
+                    CategoryId = x.Category.Id
+                })
+                .Where(x => x.Id == id)
+                .AsNoTracking()
+                .FirstOrDefault();
+         }
+
         public void Save(Product product)
         {
             _context.Add(product);

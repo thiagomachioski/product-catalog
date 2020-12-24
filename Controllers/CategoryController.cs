@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Products.Catalog.Data;
 using Products.Catalog.Models;
+using Products.Catalog.Repositories;
+using Products.Catalog.ViewModels;
+using Products.Catalog.ViewModels.CategoryViewModels;
 
 namespace Products.Catalog.Controllers
 {
@@ -11,59 +11,35 @@ namespace Products.Catalog.Controllers
     public class CategoryController : ControllerBase
     {
 
-        private readonly StoreDataContext _context;
+        private readonly CategoryRepository _repository;
 
-        public CategoryController(StoreDataContext context)
+        public CategoryController(CategoryRepository repository)
         {
-            _context = context;
+           _repository = repository;
         }
 
         [Route("v1/categories")]
         [HttpGet]
-        public IEnumerable<Category> Get()
+        public IEnumerable<ListCategoryViewModel> Get()
         {
-            return _context.Categories.AsNoTracking().ToList();
-        }
-
-        [Route("v1/categories/{id}")]
-        [HttpGet]
-        public Category Get(int id)
-        {
-            return _context.Categories.AsNoTracking().Where(x => x.Id == id).FirstOrDefault();
-        }
-
-        [Route("v1/categories/{id}/products")]
-        [HttpGet]
-        public IEnumerable<Product> GetProducts(int id)
-        {
-            return _context.Products.AsNoTracking().Where(x => x.CategoryId == id).ToList();
+            return _repository.Get();
         }
 
         [Route("v1/categories")]
         [HttpPost]
-        public Category Post([FromBody] Category category)
+        public ResultViewModel Post([FromBody] EditorCategoryViewModel model)
         {
-            _context.Categories.Add(category);
-            _context.SaveChanges();
-            return category;
-        }
+            var category = new Category();
+            category.Title = model.Title;
 
-        [Route("v1/categories")]
-        [HttpPut]
-        public Category Put([FromBody] Category category)
-        {
-            _context.Entry(category).State = EntityState.Modified;
-            _context.SaveChanges();
-            return category;
-        }
+            _repository.Save(category);
 
-        [Route("v1/categories")]
-        [HttpDelete]
-        public Category Delete([FromBody] Category category)
-        {
-            _context.Categories.Remove(category);
-            _context.SaveChanges();
-            return category;
+            return new ResultViewModel
+            {
+                Success = true,
+                Message = "Categoria Cadastrada com sucesso",
+                Data = category
+            };
         }
     }
 }

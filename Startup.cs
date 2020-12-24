@@ -22,6 +22,7 @@ namespace Products.Catalog
         {
             services.AddScoped<StoreDataContext, StoreDataContext>();
             services.AddTransient<ProductRepository, ProductRepository>();
+            services.AddTransient<CategoryRepository, CategoryRepository>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

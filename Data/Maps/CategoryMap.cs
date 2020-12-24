@@ -11,6 +11,7 @@ namespace Products.Catalog.Data.Maps
             builder.ToTable("Category");
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Title).IsRequired().HasMaxLength(120).HasColumnType("varchar(120)");
+            builder.HasMany(x => x.Products).WithOne(x => x.Category);
         }
     }
 }
