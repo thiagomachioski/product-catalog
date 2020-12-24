@@ -15,7 +15,7 @@ namespace Products.Catalog.Controllers
 
         public CategoryController(CategoryRepository repository)
         {
-           _repository = repository;
+            _repository = repository;
         }
 
         [Route("v1/categories")]
@@ -25,21 +25,72 @@ namespace Products.Catalog.Controllers
             return _repository.Get();
         }
 
+        [Route("v1/categories/{id}")]
+        [HttpGet]
+        public ListCategoryViewModel Get(int id)
+        {
+            return _repository.GetById(id);
+        }
+
         [Route("v1/categories")]
         [HttpPost]
-        public ResultViewModel Post([FromBody] EditorCategoryViewModel model)
+        public IActionResult Post([FromBody] EditorCategoryViewModel model)
         {
+
+            model.Validate();
+            if (model.Invalid)
+            {
+                return new BadRequestObjectResult(
+                  new ResultViewModel
+                  {
+                      Success = false,
+                      Message = "Erro ao cadastrar categoria",
+                      Data = model.Notifications
+                  });
+            }
             var category = new Category();
             category.Title = model.Title;
 
             _repository.Save(category);
 
-            return new ResultViewModel
-            {
-                Success = true,
-                Message = "Categoria Cadastrada com sucesso",
-                Data = category
-            };
+            return new OkObjectResult(
+                new ResultViewModel
+                {
+                    Success = true,
+                    Message = "Categoria Cadastrada com sucesso",
+                    Data = category
+                });
         }
+
+        [Route("v1/categories")]
+        [HttpPut]
+        public IActionResult Put([FromBody] EditorCategoryViewModel model)
+        {
+            model.Validate();
+            if (model.Invalid)
+            {
+                return new BadRequestObjectResult(
+                  new ResultViewModel
+                  {
+                      Success = false,
+                      Message = "Erro ao cadastrar categoria",
+                      Data = model.Notifications
+                  });
+            }
+
+            var category = _repository.Get(model.Id);
+            category.Title = model.Title;
+
+            _repository.Update(category);
+
+            return new OkObjectResult(
+                new ResultViewModel
+                {
+                    Success = true,
+                    Message = "Categoria Cadastrada com sucesso",
+                    Data = category
+                });
+        }
+
     }
 }

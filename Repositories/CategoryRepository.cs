@@ -24,7 +24,7 @@ namespace Products.Catalog.Repositories
                 {
                     Id = x.Id,
                     Title = x.Title,
-                    Products =  x.Products.Select(p => new ListProductForCategoryViewModel 
+                    Products = x.Products.Select(p => new ListProductForCategoryViewModel
                     {
                         Id = p.Id,
                         Title = p.Title,
@@ -32,15 +32,49 @@ namespace Products.Catalog.Repositories
                         Price = p.Price,
                         Quantity = p.Quantity
                     })
-                    
+
                 })
                 .AsNoTracking()
                 .ToList();
         }
-        
+
+        public Category Get(int id)
+        {
+            return _context.Categories.Find(id);
+        }
+
+        public ListCategoryViewModel GetById(int id)
+        {
+            return _context.Categories
+                .Include(x => x.Products)
+                .Select(x => new ListCategoryViewModel
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                    Products = x.Products.Select(p => new ListProductForCategoryViewModel
+                    {
+                        Id = p.Id,
+                        Title = p.Title,
+                        Description = p.Description,
+                        Price = p.Price,
+                        Quantity = p.Quantity
+                    })
+
+                })
+                .Where(x => x.Id == id)
+                .AsNoTracking()
+                .FirstOrDefault();
+        }
+
         public void Save(Category category)
         {
             _context.Add(category);
+            _context.SaveChanges();
+        }
+
+        public void Update(Category category)
+        {
+            _context.Entry<Category>(category).State = EntityState.Modified;
             _context.SaveChanges();
         }
     }

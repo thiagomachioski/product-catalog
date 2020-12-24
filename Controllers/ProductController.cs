@@ -32,7 +32,6 @@ namespace Products.Catalog.Controllers
         {
             return _repository.GetById(id);
         }
-
         
         [Route("v1/products")]
         [HttpPost]
@@ -72,9 +71,17 @@ namespace Products.Catalog.Controllers
 
         [Route("v1/products")]
         [HttpPut]
-        public ResultViewModel Put([FromBody] EditorProductViewModel model)
+        public IActionResult Put([FromBody] EditorProductViewModel model)
         {
-
+            model.Validate();
+            if (model.Invalid)
+                return new BadRequestObjectResult(
+                    new ResultViewModel
+                    {
+                        Success = false,
+                        Message = "Erro ao cadastrar o produto",
+                        Data = model.Notifications
+                    });
             var product = _repository.Get(model.Id);
             product.Title = model.Title;
             product.CategoryId = model.CategoryId;
@@ -88,12 +95,13 @@ namespace Products.Catalog.Controllers
             //Salvar
             _repository.Update(product);
 
-            return new ResultViewModel
-            {
-                Success = true,
-                Message = "Produto alterado com sucesso",
-                Data = product
-            };
+            return new OkObjectResult(
+                new ResultViewModel
+                {
+                    Success = true,
+                    Message = "Produto cadastrado com sucesso",
+                    Data = product
+                });
         }
     }
 }
