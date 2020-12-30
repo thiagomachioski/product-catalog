@@ -53,12 +53,16 @@ namespace Products.Catalog.Controllers
 
             _repository.Save(category);
 
+            var viewModel = new EditorCategoryViewModel();
+            viewModel.Id = category.Id;
+            viewModel.Title = category.Title;
+
             return new OkObjectResult(
                 new ResultViewModel
                 {
                     Success = true,
                     Message = "Categoria Cadastrada com sucesso",
-                    Data = category
+                    Data = viewModel
                 });
         }
 
@@ -83,12 +87,16 @@ namespace Products.Catalog.Controllers
 
             _repository.Update(category);
 
+            var viewModel = new EditorCategoryViewModel();
+            viewModel.Id = category.Id;
+            viewModel.Title = category.Title;
+
             return new OkObjectResult(
                 new ResultViewModel
                 {
                     Success = true,
                     Message = "Categoria Cadastrada com sucesso",
-                    Data = category
+                    Data = viewModel
                 });
         }
 

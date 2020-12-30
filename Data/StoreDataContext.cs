@@ -6,7 +6,7 @@ namespace Products.Catalog.Data
 {
     public class StoreDataContext : DbContext
     {
-        private const string ConnectionString = "Password=!Ban4na359;Persist Security Info=True;User ID=sa;Initial Catalog=firstef;Data Source=localhost,1433";
+        private const string ConnectionString = "Password=banana;Persist Security Info=True;User ID=root;Initial Catalog=firstef;Data Source=localhost\\SQLEXPRESS";
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
 

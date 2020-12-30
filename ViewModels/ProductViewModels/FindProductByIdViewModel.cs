@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Products.Catalog.ViewModels.ProductViewModels
 {
@@ -10,9 +11,6 @@ namespace Products.Catalog.ViewModels.ProductViewModels
         public decimal Price { get; set; }
         public int Quantity { get; set; }
         public string Image { get; set; }
-        public DateTime CreateDate { get; set; }
-        public DateTime LastUpdateDate { get; set; }
-        public int CategoryId { get; set; }
-        public string Category { get; set; }
+        public CategoryForProductViewModel Category { get; set; }
     }
 }

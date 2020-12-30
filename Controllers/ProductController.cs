@@ -60,12 +60,15 @@ namespace Products.Catalog.Controllers
 
             _repository.Save(product);
 
+            var viewModel = new FindProductByIdViewModel();
+            viewModel = _repository.GetById(product.Id);
+
             return new OkObjectResult(
                 new ResultViewModel
                 {
                     Success = true,
                     Message = "Produto cadastrado com sucesso",
-                    Data = product
+                    Data = viewModel
                 });
         }
 

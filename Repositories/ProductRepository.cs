@@ -24,8 +24,7 @@ namespace Products.Catalog.Repositories
                        Id = x.Id,
                        Title = x.Title,
                        Price = x.Price,
-                       Category = x.Category.Title,
-                       CategoryId = x.Category.Id
+                       Category = new CategoryForProductViewModel { Id = x.CategoryId, Title = x.Category.Title }
                    })
                    .AsNoTracking()
                    .ToList();
@@ -47,10 +46,7 @@ namespace Products.Catalog.Repositories
                     Price = x.Price,
                     Quantity = x.Quantity,
                     Image = x.Image,
-                    CreateDate = x.CreateDate,
-                    LastUpdateDate = x.LastUpdateDate,
-                    Category = x.Category.Title,
-                    CategoryId = x.Category.Id
+                    Category = new CategoryForProductViewModel { Id = x.CategoryId, Title = x.Category.Title }
                 })
                 .Where(x => x.Id == id)
                 .AsNoTracking()

@@ -1,5 +1,4 @@
-﻿using Products.Catalog.ViewModels.ProductViewModels;
-using System;
+﻿using System;
 
 namespace Products.Catalog.Models
 {
