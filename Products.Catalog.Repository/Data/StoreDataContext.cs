@@ -8,7 +8,7 @@ namespace Products.Catalog.Repository.Data
 {
     public class StoreDataContext : DbContext
     {
-        private const string ConnectionString = "Server=localhost;Database=ProductCatalogDb;User Id=sa;Password=P1xelwolf;";
+        private const string ConnectionString = "Server=localhost;Database=ProductCatalogDb;User Id=sa;Password=vxz9fR/$qD6A/4x-]ASaCs+$[^;";
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
 
