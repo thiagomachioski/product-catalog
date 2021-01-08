@@ -5,6 +5,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Products.Catalog.Domain.Products;
+using Products.Catalog.Repository.BlobStorage;
 using Products.Catalog.UI.Extensions;
 using Products.Catalog.UI.Products.Dtos;
 
@@ -16,11 +17,17 @@ namespace Products.Catalog.UI.Controllers
 
         private readonly IProductRepository _repository;
         private readonly IMapper _mapper;
+        private readonly IBlobStorageProvider _blobStorageProvider;
 
-        public ProductController(IProductRepository repository, IMapper mapper)
+        public ProductController(
+            IProductRepository repository, 
+            IMapper mapper,
+            IBlobStorageProvider blobStorageProvider
+        )
         {
             _repository = repository;
             _mapper = mapper;
+            _blobStorageProvider = blobStorageProvider;
         }
 
         [Route("v1/products")]
@@ -64,28 +71,12 @@ namespace Products.Catalog.UI.Controllers
                 });
         }
         
-        /*
+        
         [HttpPut("v1/products/{id}/AddImage")]
-        public IActionResult AddImage([FromRoute] int id, IFormFile file)
+        public string AddImage([FromRoute] int id, IFormFile file)
         {
-            var product = _repository.GetById(id);
-            
-            if(product == null)
-                return new NotFoundObjectResult($"Produto com o Id {id} não encontrada!");
-
-            file.OpenReadStream().ToBase64();
-
-            _repository.Update(product);
-
-            return new OkObjectResult(
-                new ResultViewModel
-                {
-                    Success = true,
-                    Message = "Produto atualizado com sucesso",
-                    Data = _mapper.Map<ProductUpdateResult>(product)
-                });;
-        } 
-        */
+            return _blobStorageProvider.Upload(file.OpenReadStream(), file.Name);
+        }
 
         [Route("v1/products")]
         [HttpPut]

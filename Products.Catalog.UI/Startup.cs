@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Products.Catalog.Domain.Categories;
 using Products.Catalog.Domain.Products;
+using Products.Catalog.Repository.BlobStorage;
 using Products.Catalog.Repository.Categories;
 using Products.Catalog.Repository.Data;
 using Products.Catalog.Repository.Products;
@@ -23,6 +24,7 @@ namespace Products.Catalog.UI
             services.AddScoped<StoreDataContext, StoreDataContext>();
             services.AddTransient<IProductRepository, ProductRepository>();
             services.AddTransient<ICategoryRepository, CategoryRepository>();
+            services.AddTransient<IBlobStorageProvider, BlobStorageProvider>();
             
             services.AddControllers()
                 .AddFluentValidation(e => 
