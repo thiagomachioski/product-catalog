@@ -12,6 +12,7 @@ using Products.Catalog.Repository.Data;
 using Products.Catalog.Repository.Products;
 using Products.Catalog.UI.Categories;
 using Products.Catalog.UI.Categories.Dtos;
+using Products.Catalog.UI.Products.Dtos;
 
 namespace Products.Catalog.UI
 {
@@ -35,10 +36,27 @@ namespace Products.Catalog.UI
             
             var config = new AutoMapper.MapperConfiguration(cfg =>
             {
+                /*Category DTOs */
+                /*POST AND PUT*/
                 cfg.CreateMap<CategoryCommand, Category>();
                 cfg.CreateMap<Category, CategoryCreateResult>();
+
+                /*GET*/
                 cfg.CreateMap<Category, ListCategoryResult>();
                 cfg.CreateMap<Product, ListProductForCategoryResult>();
+
+                /*Products DTOs */
+                /*POST AND PUT*/
+                cfg.CreateMap<ProductCreateCommand, Product>();
+                cfg.CreateMap<ProductUpdateCommand, Product>();
+                cfg.CreateMap<Product, ProductCreateResult>();
+                cfg.CreateMap<Product, ProductUpdateResult>();
+                
+
+                /*GET*/
+                cfg.CreateMap<Product, FindProductByIdResult>(); 
+                cfg.CreateMap<Product, ListProductResult>();
+                cfg.CreateMap<Category, CategoryForProductResult>();
             });
             var mapper = config.CreateMapper();
             services.AddSingleton(mapper);

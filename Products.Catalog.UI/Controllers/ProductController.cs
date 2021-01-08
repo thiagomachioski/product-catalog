@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
+using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Products.Catalog.Domain.Products;
 using Products.Catalog.UI.Extensions;
@@ -13,10 +15,12 @@ namespace Products.Catalog.UI.Controllers
     {
 
         private readonly IProductRepository _repository;
+        private readonly IMapper _mapper;
 
-        public ProductController(IProductRepository repository)
+        public ProductController(IProductRepository repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
         [Route("v1/products")]
@@ -24,13 +28,7 @@ namespace Products.Catalog.UI.Controllers
         public IEnumerable<ListProductResult> Get()
         {
             var products = _repository.Get();
-            return products.Select(x => new ListProductResult
-            {
-                Id = x.Id,
-                Title = x.Title,
-                Price = x.Price,
-                Category = new CategoryForProductResult {Id = x.CategoryId, Title = x.Category.Title}
-            });
+            return _mapper.Map<List<ListProductResult>>(products);
         }
 
         [Route("v1/products/{id}")]
@@ -38,25 +36,12 @@ namespace Products.Catalog.UI.Controllers
         public FindProductByIdResult Get(int id)
         {
             var product = _repository.GetById(id);
-            return new FindProductByIdResult
-            {
-                Id = product.Id,
-                Title = product.Title,
-                Description = product.Description,
-                Price = product.Price,
-                Quantity = product.Quantity,
-                Image = product.Image,
-                Category = new CategoryForProductResult
-                {
-                    Id = product.CategoryId, 
-                    Title = product.Category.Title
-                }
-            };
+            return _mapper.Map<FindProductByIdResult>(product);
         }
-        
+
         [Route("v1/products")]
         [HttpPost]
-        public IActionResult Post([FromBody] ProductCommand command)
+        public IActionResult Post([FromBody] ProductCreateCommand command)
         {
             if (!ModelState.IsValid)
                 return new BadRequestObjectResult(
@@ -67,46 +52,44 @@ namespace Products.Catalog.UI.Controllers
                         Data = ModelState.GetErrors()
                     });
 
-            var product = new Product();
-            product.Title = command.Title;
-            product.CategoryId = command.CategoryId;
-            product.CreateDate = DateTime.Now;
-            product.Description = command.Description;
-            product.Image = command.Image;
-            product.LastUpdateDate = DateTime.Now;
-            product.Price = command.Price;
-            product.Quantity = command.Quantity;
-
+            var product = _mapper.Map<Product>(command);
             _repository.Save(product);
-            product = _repository.GetById(product.Id);
-
-            var viewModel = new FindProductByIdResult
-            {
-                Id = product.Id,
-                Title = product.Title,
-                Description = product.Description,
-                Price = product.Price,
-                Quantity = product.Quantity,
-                Image = product.Image,
-                Category = new CategoryForProductResult
-                {
-                    Id = product.CategoryId,
-                    Title = product.Category.Title
-                }
-            };
 
             return new OkObjectResult(
                 new ResultViewModel
                 {
                     Success = true,
                     Message = "Produto cadastrado com sucesso",
-                    Data = viewModel
+                    Data = _mapper.Map<ProductCreateResult>(product)
                 });
         }
+        
+        /*
+        [HttpPut("v1/products/{id}/AddImage")]
+        public IActionResult AddImage([FromRoute] int id, IFormFile file)
+        {
+            var product = _repository.GetById(id);
+            
+            if(product == null)
+                return new NotFoundObjectResult($"Produto com o Id {id} não encontrada!");
+
+            file.OpenReadStream().ToBase64();
+
+            _repository.Update(product);
+
+            return new OkObjectResult(
+                new ResultViewModel
+                {
+                    Success = true,
+                    Message = "Produto atualizado com sucesso",
+                    Data = _mapper.Map<ProductUpdateResult>(product)
+                });;
+        } 
+        */
 
         [Route("v1/products")]
         [HttpPut]
-        public IActionResult Put([FromBody] ProductCommand command)
+        public IActionResult Put([FromBody] ProductUpdateCommand command)
         {
             if (!ModelState.IsValid)
                 return new BadRequestObjectResult(
@@ -116,16 +99,12 @@ namespace Products.Catalog.UI.Controllers
                         Message = "Erro ao cadastrar o produto",
                         Data = ModelState.GetErrors()
                     });
-            var product = _repository.GetById(command.Id);
-            product.Title = command.Title;
-            product.CategoryId = command.CategoryId;
-            product.CreateDate = DateTime.Now;
-            product.Description = command.Description;
-            product.Image = command.Image;
-            product.LastUpdateDate = DateTime.Now;
-            product.Price = command.Price;
-            product.Quantity = command.Quantity;
 
+            var product = _repository.GetById(command.Id);
+            if (product == null)
+                return new NotFoundObjectResult($"Produto com o Id {command.Id} não encontrada!");
+            
+            product = _mapper.Map<Product>(command);
             //Salvar
             _repository.Update(product);
 
@@ -133,8 +112,8 @@ namespace Products.Catalog.UI.Controllers
                 new ResultViewModel
                 {
                     Success = true,
-                    Message = "Produto cadastrado com sucesso",
-                    Data = product
+                    Message = "Produto atualizado com sucesso",
+                    Data = _mapper.Map<ProductUpdateResult>(product)
                 });
         }
     }

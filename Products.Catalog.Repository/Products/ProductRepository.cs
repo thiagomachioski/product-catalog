@@ -6,7 +6,7 @@ using Products.Catalog.Repository.Data;
 
 namespace Products.Catalog.Repository.Products
 {
-    public class ProductRepository: IProductRepository
+    public class ProductRepository : IProductRepository
     {
 
         private readonly StoreDataContext _context;
@@ -22,7 +22,7 @@ namespace Products.Catalog.Repository.Products
                    .AsNoTracking()
                    .ToList();
         }
-        
+
         public Product GetById(int id)
         {
             return _context.Products
@@ -30,7 +30,7 @@ namespace Products.Catalog.Repository.Products
                 .Where(x => x.Id == id)
                 .AsNoTracking()
                 .FirstOrDefault();
-         }
+        }
 
         public void Save(Product product)
         {

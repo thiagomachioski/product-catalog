@@ -13,10 +13,7 @@ namespace Products.Catalog.UI.Controllers
         private readonly ICategoryRepository _repository;
         private readonly IMapper _mapper;
 
-        public CategoryController(
-            ICategoryRepository repository,
-            IMapper mapper
-        )
+        public CategoryController(ICategoryRepository repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
