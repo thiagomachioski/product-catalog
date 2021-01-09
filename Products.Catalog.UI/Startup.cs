@@ -21,14 +21,14 @@ namespace Products.Catalog.UI
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<StoreDataContext, StoreDataContext>();
+            services.AddSingleton<StoreDataContext>();
             services.AddTransient<IProductRepository, ProductRepository>();
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<IBlobStorageProvider, BlobStorageProvider>();
             
             services.AddControllers()
                 .AddFluentValidation(e => 
-                    e.RegisterValidatorsFromAssemblyContaining<CategoryValidator>()
+                    e.RegisterValidatorsFromAssemblyContaining<CategoryCommandValidator>()
                 );
             
             services.AddSwaggerGen(c =>
@@ -38,24 +38,17 @@ namespace Products.Catalog.UI
             
             var config = new AutoMapper.MapperConfiguration(cfg =>
             {
-                /*Category DTOs */
-                /*POST AND PUT*/
                 cfg.CreateMap<CategoryCommand, Category>();
                 cfg.CreateMap<Category, CategoryCreateResult>();
 
-                /*GET*/
                 cfg.CreateMap<Category, ListCategoryResult>();
                 cfg.CreateMap<Product, ListProductForCategoryResult>();
 
-                /*Products DTOs */
-                /*POST AND PUT*/
                 cfg.CreateMap<ProductCreateCommand, Product>();
                 cfg.CreateMap<ProductUpdateCommand, Product>();
                 cfg.CreateMap<Product, ProductCreateResult>();
                 cfg.CreateMap<Product, ProductUpdateResult>();
                 
-
-                /*GET*/
                 cfg.CreateMap<Product, FindProductByIdResult>(); 
                 cfg.CreateMap<Product, ListProductResult>();
                 cfg.CreateMap<Category, CategoryForProductResult>();

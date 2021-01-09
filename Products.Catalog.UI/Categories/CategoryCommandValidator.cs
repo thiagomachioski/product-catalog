@@ -3,9 +3,9 @@ using Products.Catalog.UI.Categories.Dtos;
 
 namespace Products.Catalog.UI.Categories
 {
-    public class CategoryValidator: AbstractValidator<CategoryCommand>
+    public class CategoryCommandValidator: AbstractValidator<CategoryCommand>
     {
-        public CategoryValidator()
+        public CategoryCommandValidator()
         {
             RuleFor(e => e.Title)
                 .NotEmpty().WithMessage("O titulo não pode ser nulo")

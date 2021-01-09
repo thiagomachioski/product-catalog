@@ -14,6 +14,9 @@ namespace Products.Catalog.Repository.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
 
+        public StoreDataContext(DbContextOptions<StoreDataContext> options): 
+            base(options){}
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(ConnectionString)
