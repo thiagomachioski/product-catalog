@@ -18,7 +18,7 @@ namespace Products.Catalog.Tests.Integration.Testes.Common
         {
             BasePath = "v1/";
             Output = output;
-            using var scope = factory.Server.Services.CreateScope();
+            var scope = factory.Server.Services.CreateScope();
             HttpClient = factory.CreateClient();
             
             CategoryRepository = scope.ServiceProvider.GetRequiredService<ICategoryRepository>();

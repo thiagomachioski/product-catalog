@@ -52,7 +52,7 @@ namespace Products.Catalog.Tests.Integration.Testes
             Output.WriteLine(await response.Content.ReadAsStringAsync());
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            category = CategoryRepository.GetById(category.Id);
+            category = CategoryRepository.Reload(category);
             Assert.Equal(Command.Id, category.Id);
             Assert.Equal(Command.Title, category.Title);
         }

@@ -9,11 +9,11 @@ using Products.Catalog.Domain.Categories;
 using Products.Catalog.Domain.Products;
 using Products.Catalog.Repository.BlobStorage;
 using Products.Catalog.Repository.Categories;
-using Products.Catalog.Repository.Data;
 using Products.Catalog.Repository.Products;
 using Products.Catalog.UI.Categories;
 using Products.Catalog.UI.Categories.Dtos;
 using Products.Catalog.UI.Products.Dtos;
+using Products.Catalog.UI.Setup;
 
 namespace Products.Catalog.UI
 {
@@ -21,7 +21,7 @@ namespace Products.Catalog.UI
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<StoreDataContext>();
+            services.AddDbContext();
             services.AddTransient<IProductRepository, ProductRepository>();
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<IBlobStorageProvider, BlobStorageProvider>();

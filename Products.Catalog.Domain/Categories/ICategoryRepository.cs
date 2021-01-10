@@ -8,5 +8,6 @@ namespace Products.Catalog.Domain.Categories
         Category GetById(int id);
         void Save(Category category);
         void Update(Category category);
+        Category Reload(Category category);
     }
 }

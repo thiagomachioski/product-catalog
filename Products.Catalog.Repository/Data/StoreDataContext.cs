@@ -10,22 +10,11 @@ namespace Products.Catalog.Repository.Data
 {
     public class StoreDataContext : DbContext
     {
-        private const string ConnectionString = "Password=CoffeAndChill13;Persist Security Info=True;User ID=root;Initial Catalog=ProductCatalog;Data Source=localhost\\SQLEXPRESS";
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
 
         public StoreDataContext(DbContextOptions<StoreDataContext> options): 
             base(options){}
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(ConnectionString)
-                .LogTo(e =>
-                    Debug.WriteLine(e),                         //Target delegate
-                    new[] { DbLoggerCategory.Database.Name },   //Filter log messages
-                    LogLevel.Information)                       //Control log level
-                .EnableSensitiveDataLogging();                  //Show parameters. Watch out for sensitive data on production environment;
-        }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

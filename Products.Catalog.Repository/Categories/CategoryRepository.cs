@@ -37,5 +37,11 @@ namespace Products.Catalog.Repository.Categories
             _context.Entry(category).State = EntityState.Modified;
             _context.SaveChanges();
         }
+
+        public Category Reload(Category category)
+        {
+            _context.Entry(category).Reload();
+            return category;
+        }
     }
 }
