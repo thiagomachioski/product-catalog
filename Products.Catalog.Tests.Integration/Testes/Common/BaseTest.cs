@@ -15,7 +15,10 @@ namespace Products.Catalog.Tests.Integration.Testes.Common
         protected readonly HttpClient HttpClient;
         
         protected readonly ICategoryRepository CategoryRepository;
+        protected readonly ICategoryGenerator CategoryGenerator;
+
         protected readonly IProductRepository ProductRepository;
+        protected readonly IProductGenerator ProductGenerator;
 
         protected BaseTest(TestWebApplicationFactory factory, ITestOutputHelper output)
         {
@@ -25,7 +28,10 @@ namespace Products.Catalog.Tests.Integration.Testes.Common
             HttpClient = factory.CreateClient();
             
             CategoryRepository = scope.ServiceProvider.GetRequiredService<ICategoryRepository>();
+            CategoryGenerator = scope.ServiceProvider.GetRequiredService<ICategoryGenerator>();
+
             ProductRepository = scope.ServiceProvider.GetRequiredService<IProductRepository>();
+            ProductGenerator = scope.ServiceProvider.GetRequiredService<IProductGenerator>();
         }
     }
 }

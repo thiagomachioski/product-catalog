@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Products.Catalog.Repository.BlobStorage;
 using Products.Catalog.Repository.Data;
+using Products.Catalog.Tests.Integration.Generators;
 using Products.Catalog.Tests.Integration.Mock;
 using Products.Catalog.UI;
 
@@ -17,6 +18,8 @@ namespace Products.Catalog.Tests.Integration
             builder.ConfigureServices(services =>
             {
                 services.AddTransient<IBlobStorageProvider, BlobStorageMockProvider>();
+                services.AddTransient<ICategoryGenerator, CategoryGenerator>();
+                services.AddTransient<IProductGenerator, ProductGenerator>();
 
                 var descriptor = services.SingleOrDefault(e => 
                     e.ServiceType == typeof(DbContextOptions<StoreDataContext>)

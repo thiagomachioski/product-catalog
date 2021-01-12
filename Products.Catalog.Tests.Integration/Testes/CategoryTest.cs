@@ -2,7 +2,6 @@
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Products.Catalog.Tests.Integration.Generators;
 using Products.Catalog.Tests.Integration.Testes.Common;
 using Products.Catalog.UI.Categories.Dtos;
 using Xunit;

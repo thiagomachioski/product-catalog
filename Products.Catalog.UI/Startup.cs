@@ -25,7 +25,7 @@ namespace Products.Catalog.UI
             services.AddTransient<IProductRepository, ProductRepository>();
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<IBlobStorageProvider, BlobStorageProvider>();
-            
+
             services.AddControllers()
                 .AddFluentValidation(e => 
                     e.RegisterValidatorsFromAssemblyContaining<CategoryCommandValidator>()

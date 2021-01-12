@@ -2,9 +2,9 @@
 
 namespace Products.Catalog.Tests.Integration.Generators
 {
-    public class CategoryGenerator
+    public class CategoryGenerator : ICategoryGenerator
     {
-        public static Category GenerateAndSave(ICategoryRepository categoryRepository)
+        public Category GenerateAndSave(ICategoryRepository categoryRepository)
         {
             var category = new Category
             {

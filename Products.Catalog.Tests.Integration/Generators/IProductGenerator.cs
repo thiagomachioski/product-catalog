@@ -4,6 +4,6 @@ namespace Products.Catalog.Tests.Integration.Generators
 {
     public interface IProductGenerator
     {
-        Product GenerateAndSave(IProductRepository productRepository);
+        Product GenerateAndSave(IProductRepository productRepository, int categoryId);
     }
 }

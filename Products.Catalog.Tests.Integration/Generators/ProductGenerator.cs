@@ -1,9 +1,9 @@
 ﻿using Products.Catalog.Domain.Products;
 namespace Products.Catalog.Tests.Integration.Generators
 {
-    public static class ProductGenerator 
+    public class ProductGenerator : IProductGenerator
     {
-        public static Product GenerateAndSave(IProductRepository productRepository, int categoryId)
+        public Product GenerateAndSave(IProductRepository productRepository, int categoryId)
         {
             var product = new Product
             {
