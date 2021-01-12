@@ -78,7 +78,7 @@ namespace Products.Catalog.UI.Controllers
 
         [Route("v1/products")]
         [HttpPut]
-        public IActionResult Put([FromBody] ProductUpdateCommand command)
+        public IActionResult Put([FromBody] ProductCreateCommand command)
         {
             if (!ModelState.IsValid)
                 return new BadRequestObjectResult(

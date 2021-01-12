@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Products.Catalog.Tests.Integration.Generators;
@@ -12,9 +13,9 @@ namespace Products.Catalog.Tests.Integration.Testes
     public class CategoryTest : BaseTest
     {
         private CategoryCommand Command { get; }
-        
+
         public CategoryTest(
-            TestWebApplicationFactory factory, 
+            TestWebApplicationFactory factory,
             ITestOutputHelper output
         ) : base(factory, output)
         {
@@ -23,7 +24,7 @@ namespace Products.Catalog.Tests.Integration.Testes
                 Title = "Category"
             };
         }
-        
+
         [Fact]
         public async Task Title_Cannot_Be_Empty()
         {
@@ -41,13 +42,21 @@ namespace Products.Catalog.Tests.Integration.Testes
             Output.WriteLine(await response.Content.ReadAsStringAsync());
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
-        
+
+        [Fact]
+        public async Task Must_Save()
+        {
+            var response = await HttpClient.PostAsJsonAsync($"{BasePath}Categories", Command);
+            Output.WriteLine(await response.Content.ReadAsStringAsync());
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
         [Fact]
         public async Task Must_Update()
         {
             var category = CategoryGenerator.GenerateAndSave(CategoryRepository);
             Command.Id = category.Id;
-            
+
             var response = await HttpClient.PutAsJsonAsync($"{BasePath}Categories", Command);
             Output.WriteLine(await response.Content.ReadAsStringAsync());
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -56,13 +65,13 @@ namespace Products.Catalog.Tests.Integration.Testes
             Assert.Equal(Command.Id, category.Id);
             Assert.Equal(Command.Title, category.Title);
         }
-        
+
         [Fact]
-        public async Task Must_Save()
+        public async Task Category_Must_Exist()
         {
-            var response = await HttpClient.PostAsJsonAsync($"{BasePath}Categories", Command);
-            Output.WriteLine(await response.Content.ReadAsStringAsync());
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Command.Id = 999;
+            var response = await HttpClient.PutAsJsonAsync($"{BasePath}Categories", Command);
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
     }
 }

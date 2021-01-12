@@ -42,5 +42,12 @@ namespace Products.Catalog.Repository.Products
             _context.Entry(product).State = EntityState.Modified;
             _context.SaveChanges();
         }
+
+
+        public Product Reload(Product product)
+        {
+            _context.Entry(product).Reload();
+            return product;
+        }
     }
 }

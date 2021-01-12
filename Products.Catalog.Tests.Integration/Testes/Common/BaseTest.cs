@@ -1,6 +1,8 @@
 ﻿using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Products.Catalog.Domain.Categories;
+using Products.Catalog.Domain.Products;
+using Products.Catalog.Tests.Integration.Generators;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -13,6 +15,7 @@ namespace Products.Catalog.Tests.Integration.Testes.Common
         protected readonly HttpClient HttpClient;
         
         protected readonly ICategoryRepository CategoryRepository;
+        protected readonly IProductRepository ProductRepository;
 
         protected BaseTest(TestWebApplicationFactory factory, ITestOutputHelper output)
         {
@@ -22,6 +25,7 @@ namespace Products.Catalog.Tests.Integration.Testes.Common
             HttpClient = factory.CreateClient();
             
             CategoryRepository = scope.ServiceProvider.GetRequiredService<ICategoryRepository>();
+            ProductRepository = scope.ServiceProvider.GetRequiredService<IProductRepository>();
         }
     }
 }
