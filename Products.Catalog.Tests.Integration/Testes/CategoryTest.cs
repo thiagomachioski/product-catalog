@@ -25,7 +25,7 @@ namespace Products.Catalog.Tests.Integration.Testes
         }
 
         [Fact]
-        public async Task Title_Cannot_Be_Empty()
+        public async Task Title_Must_Be_Not_Empty()
         {
             Command.Title = string.Empty;
             var response = await HttpClient.PostAsJsonAsync($"{BasePath}Categories", Command);
@@ -34,12 +34,20 @@ namespace Products.Catalog.Tests.Integration.Testes
         }
 
         [Fact]
-        public async Task Title_Cannot_Be_Null()
+        public async Task Title_Must_Be_Not_Null()
         {
             Command.Title = null;
             var response = await HttpClient.PostAsJsonAsync($"{BasePath}Categories", Command);
             Output.WriteLine(await response.Content.ReadAsStringAsync());
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Category_Must_Exists()
+        {
+            Command.Id = 999;
+            var response = await HttpClient.PutAsJsonAsync($"{BasePath}Categories", Command);
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
         [Fact]
@@ -63,14 +71,6 @@ namespace Products.Catalog.Tests.Integration.Testes
             category = CategoryRepository.Reload(category);
             Assert.Equal(Command.Id, category.Id);
             Assert.Equal(Command.Title, category.Title);
-        }
-
-        [Fact]
-        public async Task Category_Must_Exist()
-        {
-            Command.Id = 999;
-            var response = await HttpClient.PutAsJsonAsync($"{BasePath}Categories", Command);
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
     }
 }

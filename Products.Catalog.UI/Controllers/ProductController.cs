@@ -2,6 +2,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Products.Catalog.Domain.Categories;
 using Products.Catalog.Domain.Products;
 using Products.Catalog.Repository.BlobStorage;
 using Products.Catalog.UI.Extensions;
@@ -13,17 +14,20 @@ namespace Products.Catalog.UI.Controllers
     public class ProductController : ControllerBase
     {
 
-        private readonly IProductRepository _repository;
+        private readonly IProductRepository _productRepository;
+        private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
         private readonly IBlobStorageProvider _blobStorageProvider;
 
         public ProductController(
-            IProductRepository repository, 
+            IProductRepository productRepository, 
+            ICategoryRepository categoryRepository,
             IMapper mapper,
             IBlobStorageProvider blobStorageProvider
         )
         {
-            _repository = repository;
+            _productRepository = productRepository;
+            _categoryRepository = categoryRepository;
             _mapper = mapper;
             _blobStorageProvider = blobStorageProvider;
         }
@@ -32,7 +36,7 @@ namespace Products.Catalog.UI.Controllers
         [HttpGet]
         public IEnumerable<ListProductResult> Get()
         {
-            var products = _repository.Get();
+            var products = _productRepository.Get();
             return _mapper.Map<List<ListProductResult>>(products);
         }
 
@@ -40,7 +44,7 @@ namespace Products.Catalog.UI.Controllers
         [HttpGet]
         public FindProductByIdResult Get(int id)
         {
-            var product = _repository.GetById(id);
+            var product = _productRepository.GetById(id);
             return _mapper.Map<FindProductByIdResult>(product);
         }
 
@@ -57,8 +61,12 @@ namespace Products.Catalog.UI.Controllers
                         Data = ModelState.GetErrors()
                     });
 
+            var category = _categoryRepository.GetById(command.CategoryId);
+            if (category == null)
+                return new NotFoundObjectResult($"Categoria com o id {command.CategoryId} não encontrado!");
+
             var product = _mapper.Map<Product>(command);
-            _repository.Save(product);
+            _productRepository.Save(product);
 
             return new OkObjectResult(
                 new ResultViewModel
@@ -68,7 +76,6 @@ namespace Products.Catalog.UI.Controllers
                     Data = _mapper.Map<ProductCreateResult>(product)
                 });
         }
-        
         
         [HttpPut("v1/products/{id}/AddImage")]
         public string AddImage([FromRoute] int id, IFormFile file)
@@ -89,13 +96,13 @@ namespace Products.Catalog.UI.Controllers
                         Data = ModelState.GetErrors()
                     });
 
-            var product = _repository.GetById(command.Id);
+            var product = _productRepository.GetById(command.Id);
             if (product == null)
                 return new NotFoundObjectResult($"Produto com o Id {command.Id} não encontrada!");
             
             product = _mapper.Map<Product>(command);
             //Salvar
-            _repository.Update(product);
+            _productRepository.Update(product);
 
             return new OkObjectResult(
                 new ResultViewModel
