@@ -2,6 +2,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
@@ -9,6 +10,7 @@ using Products.Catalog.Domain.Categories;
 using Products.Catalog.Domain.Products;
 using Products.Catalog.Repository.BlobStorage;
 using Products.Catalog.Repository.Categories;
+using Products.Catalog.Repository.Infra;
 using Products.Catalog.Repository.Products;
 using Products.Catalog.UI.Categories;
 using Products.Catalog.UI.Categories.Dtos;
@@ -19,9 +21,17 @@ namespace Products.Catalog.UI
 {
     public class Startup
     {
+        private AppSettings AppSettings { get; }
+
+        public Startup(IConfiguration configuration)
+        {
+            AppSettings = configuration.Get<AppSettings>();
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext();
+            services.AddSingleton(AppSettings);
+            services.AddDbContext(AppSettings.ConnectionString);
             services.AddTransient<IProductRepository, ProductRepository>();
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<IBlobStorageProvider, BlobStorageProvider>();

@@ -9,13 +9,11 @@ namespace Products.Catalog.UI.Setup
 {
     public static class DatabaseSetup
     {
-        private const string ConnectionString = "Password=CoffeAndChill13;Persist Security Info=True;User ID=root;Initial Catalog=ProductCatalog;Data Source=localhost\\SQLEXPRESS";
-
-        public static IServiceCollection AddDbContext(this IServiceCollection services)
+        public static IServiceCollection AddDbContext(this IServiceCollection services, string connectionString)
         {
             services.AddDbContext<StoreDataContext>(options =>
                 options
-                    .UseSqlServer(ConnectionString, sqlOptions => {
+                    .UseSqlServer(connectionString, sqlOptions => {
                         sqlOptions.EnableRetryOnFailure();
                         sqlOptions.CommandTimeout((int)TimeSpan.FromMinutes(10).TotalSeconds);
                     }).LogTo(e =>

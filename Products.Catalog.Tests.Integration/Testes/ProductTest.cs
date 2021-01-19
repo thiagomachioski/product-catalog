@@ -1,4 +1,5 @@
-﻿using Products.Catalog.Tests.Integration.Generators;
+﻿using Bogus;
+using Products.Catalog.Tests.Integration.Generators;
 using Products.Catalog.Tests.Integration.Testes.Common;
 using Products.Catalog.UI.Products.Dtos;
 using System.Net;
@@ -12,6 +13,7 @@ namespace Products.Catalog.Tests.Integration.Testes
     public class ProductTest : BaseTest
     {
         private ProductCreateCommand Command { get; }
+        private Faker Faker { get; set; } = new Faker();
         public ProductTest
             (
             TestWebApplicationFactory factory,
@@ -63,9 +65,7 @@ namespace Products.Catalog.Tests.Integration.Testes
         [Fact]
         public async Task Title_Must_Have_Less_Then_120_Characters()
         {
-            Command.Title = "Percebemos, cada vez mais, que o consenso sobre a necessidade de " +
-                "qualificação não pode mais se dissociar dos conhecimentos estratégicos para atingir a excelência. " +
-                "O que temos que ter sempre em mente";
+            Command.Title = Faker.Lorem.Letter(121);
 
             var response = await HttpClient.PostAsJsonAsync($"{BasePath}Products", Command);
             Output.WriteLine(await response.Content.ReadAsStringAsync());
@@ -105,18 +105,7 @@ namespace Products.Catalog.Tests.Integration.Testes
         [Fact]
         public async Task Description_Must_Have_Less_Then_1024_Characters()
         {
-            Command.Description = " Percebemos, cada vez mais, que o consenso sobre a necessidade de qualificação não pode mais se dissociar dos conhecimentos " +
-                "estratégicos para atingir a excelência. " +
-                "O que temos que ter sempre em mente é que o comprometimento entre as equipes cumpre um papel essencial na formulação de alternativas às " +
-                "soluções ortodoxas. Neste sentido, " +
-                "a hegemonia do ambiente político exige a precisão e a definição das formas de ação" +
-                "Acima de tudo, é fundamental ressaltar que a estrutura atual da organização auxilia a preparação e a composição das posturas dos órgãos " +
-                "dirigentes com relação às suas atribuições." +
-                "Do mesmo modo, a crescente influência da mídia garante a contribuição de um grupo importante na determinação do fluxo de informações." +
-                "Por outro lado, o desenvolvimento contínuo de distintas" +
-                "formas de atuação é uma das consequências do levantamento das variáveis envolvidas." +
-                "Todas estas questões, devidamente ponderadas, levantam dúvidas sobre se a contínua expansão de nossa atividade aponta para a " +
-                "melhoria das direções preferenciais no sentido do progresso";
+            Command.Description = Faker.Lorem.Letter(1025);
 
             var response = await HttpClient.PostAsJsonAsync($"{BasePath}Products", Command);
             Output.WriteLine(await response.Content.ReadAsStringAsync());
