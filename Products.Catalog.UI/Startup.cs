@@ -45,9 +45,7 @@ namespace Products.Catalog.UI
                 cfg.CreateMap<Product, ListProductForCategoryResult>();
 
                 cfg.CreateMap<ProductCreateCommand, Product>();
-                cfg.CreateMap<ProductUpdateCommand, Product>();
                 cfg.CreateMap<Product, ProductCreateResult>();
-                cfg.CreateMap<Product, ProductUpdateResult>();
                 
                 cfg.CreateMap<Product, FindProductByIdResult>(); 
                 cfg.CreateMap<Product, ListProductResult>();

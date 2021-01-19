@@ -51,7 +51,7 @@ namespace Products.Catalog.Tests.Integration.Testes
         }
 
         [Fact]
-        public async Task Title_Must_Contain_On_Minimum_Three_Characters()
+        public async Task Title_Must_Contain_At_Least_3_Characters()
         {
             Command.Title = "Hi";
 
@@ -61,7 +61,7 @@ namespace Products.Catalog.Tests.Integration.Testes
         }
 
         [Fact]
-        public async Task Title_Must_Contain_On_Maximum_Hundred_Twenty_Characters()
+        public async Task Title_Must_Have_Less_Then_120_Characters()
         {
             Command.Title = "Percebemos, cada vez mais, que o consenso sobre a necessidade de " +
                 "qualificação não pode mais se dissociar dos conhecimentos estratégicos para atingir a excelência. " +

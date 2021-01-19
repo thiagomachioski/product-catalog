@@ -4,7 +4,7 @@ namespace Products.Catalog.Domain.Products
 {
     public interface IProductRepository
     {
-        IEnumerable<Product> Get();
+        IList<Product> Get(int page, int itemsPerPage, string query);
         Product GetById(int id);
         void Save(Product product);
         void Update(Product product);

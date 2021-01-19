@@ -15,13 +15,14 @@ namespace Products.Catalog.Repository.Products
         {
             _context = context;
         }
-        public IEnumerable<Product> Get()
-        {
-            return _context.Products
-                    .Include(x => x.Category)
-                   .AsNoTracking()
-                   .ToList();
-        }
+
+        public IList<Product> Get(int page = 1, int itemsPerPage = 10, string query = "") =>
+            _context.Products
+                .Include(x => x.Category)
+                .Where(x => x.Title.Contains(query) || string.IsNullOrEmpty(query))
+                .Skip((page - 1) * itemsPerPage)
+                .Take(itemsPerPage)
+                .ToList();
 
         public Product GetById(int id)
         {
@@ -31,7 +32,6 @@ namespace Products.Catalog.Repository.Products
                 .AsNoTracking()
                 .FirstOrDefault();
         }
-
         public void Save(Product product)
         {
             _context.Add(product);
@@ -43,11 +43,11 @@ namespace Products.Catalog.Repository.Products
             _context.SaveChanges();
         }
 
-
         public Product Reload(Product product)
         {
             _context.Entry(product).Reload();
             return product;
         }
+
     }
 }

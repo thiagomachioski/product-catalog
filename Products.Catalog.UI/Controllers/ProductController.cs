@@ -34,9 +34,9 @@ namespace Products.Catalog.UI.Controllers
 
         [Route("v1/products")]
         [HttpGet]
-        public IEnumerable<ListProductResult> Get()
+        public IEnumerable<ListProductResult> Get([FromQuery] int page = 1, [FromQuery] int itemsPerPage = 10, [FromQuery] string query = "")
         {
-            var products = _productRepository.Get();
+            var products = _productRepository.Get(page, itemsPerPage, query);
             return _mapper.Map<List<ListProductResult>>(products);
         }
 
@@ -78,9 +78,17 @@ namespace Products.Catalog.UI.Controllers
         }
         
         [HttpPut("v1/products/{id}/AddImage")]
-        public string AddImage([FromRoute] int id, IFormFile file)
+        public IActionResult AddImage([FromRoute] int id, IFormFile file)
         {
-            return _blobStorageProvider.Upload(file.OpenReadStream(), file.Name);
+            var product = _productRepository.GetById(id);
+
+            if (product == null)
+                return new NotFoundObjectResult($"Produto com o id {id} não encontrado");
+
+            product.Image = _blobStorageProvider.Upload(file.OpenReadStream(), file.FileName); 
+            _productRepository.Update(product);
+
+            return new OkObjectResult(product.Image);
         }
 
         [Route("v1/products")]
@@ -109,7 +117,7 @@ namespace Products.Catalog.UI.Controllers
                 {
                     Success = true,
                     Message = "Produto atualizado com sucesso",
-                    Data = _mapper.Map<ProductUpdateResult>(product)
+                    Data = _mapper.Map<ProductCreateResult>(product)
                 });
         }
     }

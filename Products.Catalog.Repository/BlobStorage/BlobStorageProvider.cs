@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Azure.Storage.Blobs;
 
 namespace Products.Catalog.Repository.BlobStorage
@@ -10,7 +11,7 @@ namespace Products.Catalog.Repository.BlobStorage
         
         public string Upload(Stream stream, string fileName)
         {
-            var blobClient = GetContainerClient().GetBlobClient(fileName);
+            var blobClient = GetContainerClient().GetBlobClient($"{Guid.NewGuid()}{fileName}");
             blobClient.Upload(stream);
             return blobClient.Uri.AbsoluteUri;
         }
