@@ -67,6 +67,8 @@ namespace Products.Catalog.Tests.Integration.Testes
         {
             Command.Title = Faker.Lorem.Letter(121);
 
+
+
             var response = await HttpClient.PostAsJsonAsync($"{BasePath}Products", Command);
             Output.WriteLine(await response.Content.ReadAsStringAsync());
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
