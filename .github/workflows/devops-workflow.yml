@@ -9,7 +9,7 @@ jobs:
     
     env: 
       PACKAGE_PATH: ./Products.Catalog.sln
-      TESTS_PATH: ./product-catalog/Products.Catalog.Tests.Integration/Products.Catalog.Tests.Integration.csproj
+      TESTS_PATH: ./Products.Catalog.Tests.Integration/Products.Catalog.Tests.Integration.csproj
     
     runs-on: ubuntu-latest
 
