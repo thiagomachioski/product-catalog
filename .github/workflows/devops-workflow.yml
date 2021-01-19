@@ -8,8 +8,8 @@ jobs:
   build:
     
     env: 
-      PACKAGE_PATH: ./product-catalog
-      TESTS_PATH: ./product-catalog/Products.Catalog.Tests.Integration/Products.Catalog.Tests.Integration.csproj
+      PACKAGE_PATH: ./Products.Catalog.sln
+      TESTS_PATH: ./Products.Catalog.Tests.Integration/Products.Catalog.Tests.Integration.csproj
     
     runs-on: ubuntu-latest
 
